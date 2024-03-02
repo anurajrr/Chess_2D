@@ -8,6 +8,15 @@ public class CordinatesToggle : MonoBehaviour
 
     private bool isToggled = false; // Track the toggle state
 
+    void Start()
+    {
+        // Deactivate all objects in the array when the game starts
+        foreach (var row in rows)
+        {
+            row.SetActive(false);
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
