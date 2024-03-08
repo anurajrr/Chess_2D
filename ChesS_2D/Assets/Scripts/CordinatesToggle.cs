@@ -32,7 +32,7 @@ public class CordinatesToggle : MonoBehaviour
             }
 
             // Log the current state
-            Debug.Log(isToggled ? "ON" : "OFF");
+            // Debug.Log(isToggled ? "ON" : "OFF");
         }
     }
 }

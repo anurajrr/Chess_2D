@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Board
+    uniqueID: 2806872151
+    locked: 0
+  - name: piece
+    uniqueID: 2593341947
+    locked: 0
+  - name: Highlight
+    uniqueID: 603299913
+    locked: 0
