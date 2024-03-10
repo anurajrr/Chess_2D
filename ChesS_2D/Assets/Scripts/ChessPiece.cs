@@ -34,18 +34,18 @@ public class ChessPiece : MonoBehaviour
         //Choose correct sprite based on piece's name
         switch (this.name)
         {
-            case "black_queen" : this.GetComponent<SpriteRenderer>().sprite = black_queen ; player = "black"; break;
+            case "black_queen": this.GetComponent<SpriteRenderer>().sprite = black_queen; player = "black"; break;
             case "black_knight": this.GetComponent<SpriteRenderer>().sprite = black_knight; player = "black"; break;
             case "black_bishop": this.GetComponent<SpriteRenderer>().sprite = black_bishop; player = "black"; break;
-            case "black_king"  : this.GetComponent<SpriteRenderer>().sprite = black_king  ; player = "black"; break;
-            case "black_rook"  : this.GetComponent<SpriteRenderer>().sprite = black_rook  ; player = "black"; break;
-            case "black_pawn"  : this.GetComponent<SpriteRenderer>().sprite = black_pawn  ; player = "black"; break;
-            case "white_queen" : this.GetComponent<SpriteRenderer>().sprite = white_queen ; player = "white"; break;
+            case "black_king": this.GetComponent<SpriteRenderer>().sprite = black_king; player = "black"; break;
+            case "black_rook": this.GetComponent<SpriteRenderer>().sprite = black_rook; player = "black"; break;
+            case "black_pawn": this.GetComponent<SpriteRenderer>().sprite = black_pawn; player = "black"; break;
+            case "white_queen": this.GetComponent<SpriteRenderer>().sprite = white_queen; player = "white"; break;
             case "white_knight": this.GetComponent<SpriteRenderer>().sprite = white_knight; player = "white"; break;
             case "white_bishop": this.GetComponent<SpriteRenderer>().sprite = white_bishop; player = "white"; break;
-            case "white_king"  : this.GetComponent<SpriteRenderer>().sprite = white_king  ; player = "white"; break;
-            case "white_rook"  : this.GetComponent<SpriteRenderer>().sprite = white_rook  ; player = "white"; break;
-            case "white_pawn"  : this.GetComponent<SpriteRenderer>().sprite = white_pawn  ; player = "white"; break;
+            case "white_king": this.GetComponent<SpriteRenderer>().sprite = white_king; player = "white"; break;
+            case "white_rook": this.GetComponent<SpriteRenderer>().sprite = white_rook; player = "white"; break;
+            case "white_pawn": this.GetComponent<SpriteRenderer>().sprite = white_pawn; player = "white"; break;
         }
     }
 
@@ -147,10 +147,26 @@ public class ChessPiece : MonoBehaviour
                 LineMovePlate(0, -1);
                 break;
             case "black_pawn":
-                PawnMovePlate(xBoard, yBoard - 1);
+                if (yBoard == 6)
+                {
+                    PawnMovePlate(xBoard, yBoard - 1);
+                    PawnMovePlate(xBoard, yBoard - 2);
+                }
+                else
+                {
+                    PawnMovePlate(xBoard, yBoard - 1);
+                }
                 break;
             case "white_pawn":
-                PawnMovePlate(xBoard, yBoard + 1);
+                if (yBoard == 1)
+                {
+                    PawnMovePlate(xBoard, yBoard + 1);
+                    PawnMovePlate(xBoard, yBoard + 2);
+                }
+                else
+                {
+                    PawnMovePlate(xBoard, yBoard + 1);
+                }
                 break;
         }
     }
@@ -218,26 +234,38 @@ public class ChessPiece : MonoBehaviour
     }
 
     public void PawnMovePlate(int x, int y)
+{
+    Game sc = controller.GetComponent<Game>();
+    if (sc.PositionOnBoard(x, y))
     {
-        Game sc = controller.GetComponent<Game>();
-        if (sc.PositionOnBoard(x, y))
+        // Check if the destination square is empty
+        if (sc.GetPosition(x, y) == null)
         {
-            if (sc.GetPosition(x, y) == null)
-            {
-                MovePlateSpawn(x, y);
-            }
+            MovePlateSpawn(x, y);
 
-            if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<ChessPiece>().player != player)
+            // If the pawn moved two squares forward, check if it can be captured en passant
+            if (Mathf.Abs(y - yBoard) == 2)
             {
-                MovePlateAttackSpawn(x + 1, y);
-            }
+                // Check if there is an enemy pawn to the left
+                if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, yBoard) != null &&
+                    sc.GetPosition(x + 1, yBoard).GetComponent<ChessPiece>().player != player &&
+                    sc.GetPosition(x + 1, yBoard).GetComponent<ChessPiece>().name == "white_pawn")
+                {
+                    MovePlateAttackSpawn(x + 1, y);
+                }
 
-            if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<ChessPiece>().player != player)
-            {
-                MovePlateAttackSpawn(x - 1, y);
+                // Check if there is an enemy pawn to the right
+                if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, yBoard) != null &&
+                    sc.GetPosition(x - 1, yBoard).GetComponent<ChessPiece>().player != player &&
+                    sc.GetPosition(x - 1, yBoard).GetComponent<ChessPiece>().name == "white_pawn")
+                {
+                    MovePlateAttackSpawn(x - 1, y);
+                }
             }
         }
     }
+}
+
 
     public void MovePlateSpawn(int matrixX, int matrixY)
     {

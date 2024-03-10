@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-
 public class Game : MonoBehaviour
 {    //Reference from Unity IDE
     public GameObject chesspiece;
