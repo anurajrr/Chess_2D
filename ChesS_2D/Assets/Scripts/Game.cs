@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // Import the UnityEngine.UI namespace for accessing UI components
 
 public class Game : MonoBehaviour
 {
     // Reference to the Timer script
     public Timer timer;
+
+    // Reference to the images attached to the panels
+    public Image whitePanelImage;
+    public Image blackPanelImage;
 
     // Reference to the chesspiece prefab
     public GameObject chesspiece;
@@ -45,6 +50,9 @@ public class Game : MonoBehaviour
 
         // Start the first player's timer
         StartPlayerTimer();
+
+        // Set the initial panel colors
+        SetPanelColors();
     }
 
     public GameObject Create(string name, int x, int y)
@@ -116,8 +124,9 @@ public class Game : MonoBehaviour
 
     public void NextTurn()
     {
-        StopPlayerTimer();
+        StopPlayerTimer(); // Stop the timer for the current player
 
+        // Switch players
         if (currentPlayer == "white")
         {
             currentPlayer = "black";
@@ -127,6 +136,23 @@ public class Game : MonoBehaviour
             currentPlayer = "white";
         }
 
-        StartPlayerTimer();
+        StartPlayerTimer(); // Start the timer for the next player
+
+        SetPanelColors(); // Update the panel colors
+    }
+
+    // Method to set the panel colors based on whose turn it is
+    void SetPanelColors()
+    {
+        if (GetCurrentPlayer() == "white")
+        {
+            whitePanelImage.color = Color.white; // Change the color of the white panel image to white
+            blackPanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the black panel image to specific RGB (51, 51, 51)
+        }
+        else
+        {
+            whitePanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the white panel image to gray
+            blackPanelImage.color = Color.white; // Change the color of the black panel image to black
+        }
     }
 }

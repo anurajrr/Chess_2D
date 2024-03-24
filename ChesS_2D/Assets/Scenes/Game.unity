@@ -454,8 +454,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 644323077}
   - {fileID: 2073913939}
+  - {fileID: 644323077}
   m_Father: {fileID: 931937992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -475,7 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d09c37faef5984282a36b854fde507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 1500109244}
+  whiteTimer_txt: {fileID: 1500109244}
+  blackTimer_txt: {fileID: 70816313}
   maxTime: 600
 --- !u!1 &893524492
 GameObject:
@@ -487,7 +488,6 @@ GameObject:
   m_Component:
   - component: {fileID: 893524494}
   - component: {fileID: 893524493}
-  - component: {fileID: 893524495}
   m_Layer: 0
   m_Name: Conroller
   m_TagString: GameController
@@ -507,6 +507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 178b470f7967a6747a76df4e7b4e38d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timer: {fileID: 740696122}
+  whitePanelImage: {fileID: 2073913940}
+  blackPanelImage: {fileID: 644323078}
   chesspiece: {fileID: 96163361566565042, guid: ee552f91816707e41870b456ff3d5ec6, type: 3}
 --- !u!4 &893524494
 Transform:
@@ -523,18 +526,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &893524495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 893524492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea575a0556045874281c79fbe083aeb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &931937988
 GameObject:
   m_ObjectHideFlags: 0
