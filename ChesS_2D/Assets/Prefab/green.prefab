@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3290657316765374321}
   - component: {fileID: 3566483074467918319}
   m_Layer: 0
-  m_Name: green 1
+  m_Name: green
   m_TagString: MoveHighLighter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 603299913
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3f79af8372965354ebd67cc5dccae6bd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 32aa35f97963ba84a8ea4829361424a7, type: 3}
   m_Color: {r: 0.0047371387, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
