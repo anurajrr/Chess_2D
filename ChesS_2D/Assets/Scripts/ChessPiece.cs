@@ -1,37 +1,28 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ChessPiece : MonoBehaviour
 {
-    //References to objects in our Unity Scene
-    public GameObject controller;
-    public GameObject movePlate;
+    public GameObject controller; // Reference to the game controller
+    public GameObject movePlate; // Reference to the move plate prefab
 
-    //Position for this Chesspiece on the Board
-    //The correct position will be set later
-    private int xBoard = -1;
-    private int yBoard = -1;
+    private int xBoard = -1; // X-coordinate of the piece on the board
+    private int yBoard = -1; // Y-coordinate of the piece on the board
+    private string player; // Player of the piece ("black" or "white")
 
-    //Variable for keeping track of the player it belongs to "black" or "white"
-    private string player;
-
-    //References to all the possible Sprites that this Chesspiece could be
+    // Sprites for different chess pieces
     public Sprite black_queen, black_knight, black_bishop, black_king, black_rook, black_pawn;
     public Sprite white_queen, white_knight, white_bishop, white_king, white_rook, white_pawn;
 
+    // Method to initialize the chess piece
     public void Activate()
     {
-        //Get the game controller
+        // Find the game controller object
         controller = GameObject.FindGameObjectWithTag("GameController");
 
-        //Take the instantiated location and adjust transform
+        // Set the initial coordinates of the piece
         SetCoords();
 
-        //Choose correct sprite based on piece's name
+        // Assign the appropriate sprite based on the piece's name
         switch (this.name)
         {
             case "black_queen": this.GetComponent<SpriteRenderer>().sprite = black_queen; player = "black"; break;
@@ -49,24 +40,18 @@ public class ChessPiece : MonoBehaviour
         }
     }
 
+    // Method to set the coordinates of the chess piece on the board
     public void SetCoords()
     {
-        //Get the board value in order to convert to xy coords
-        float x = xBoard;
-        float y = yBoard;
+        // Calculate the actual position of the piece on the board
+        float x = xBoard * 0.66f - 2.3f;
+        float y = yBoard * 0.66f - 2.3f;
 
-        //Adjust by variable offset
-        x *= 0.66f;
-        y *= 0.66f;
-
-        //Add constants (pos 0,0)
-        x += -2.3f;
-        y += -2.3f;
-
-        //Set actual unity values
+        // Set the position of the chess piece
         this.transform.position = new Vector3(x, y, -1.0f);
     }
 
+    // Getter methods for the x and y coordinates of the piece
     public int GetXBoard()
     {
         return xBoard;
@@ -77,6 +62,7 @@ public class ChessPiece : MonoBehaviour
         return yBoard;
     }
 
+    // Setter methods for the x and y coordinates of the piece
     public void SetXBoard(int x)
     {
         xBoard = x;
@@ -87,32 +73,35 @@ public class ChessPiece : MonoBehaviour
         yBoard = y;
     }
 
+    // Method called when the mouse is released over the chess piece
     private void OnMouseUp()
     {
+        // Check if the game is not over and it's the current player's turn
         if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
         {
-            //Remove all moveplates relating to previously selected piece
+            // Destroy existing move plates and initiate move plates for the selected piece
             DestroyMovePlates();
-
-            //Create new MovePlates
             InitiateMovePlates();
         }
     }
 
+    // Method to destroy existing move plates
     public void DestroyMovePlates()
     {
-        //Destroy old MovePlates
+        // Find all move plates in the scene and destroy them
         GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MoveHighLighter");
         for (int i = 0; i < movePlates.Length; i++)
         {
-            Destroy(movePlates[i]); //Be careful with this function "Destroy" it is asynchronous
+            Destroy(movePlates[i]);
         }
     }
 
+    // Method to initiate move plates for the selected piece
     public void InitiateMovePlates()
     {
         switch (this.name)
         {
+            // Handle different types of chess pieces
             case "black_queen":
             case "white_queen":
                 LineMovePlate(1, 0);
@@ -171,26 +160,25 @@ public class ChessPiece : MonoBehaviour
         }
     }
 
+    // Method to generate move plates along a line
     public void LineMovePlate(int xIncrement, int yIncrement)
     {
         Game sc = controller.GetComponent<Game>();
-
         int x = xBoard + xIncrement;
         int y = yBoard + yIncrement;
-
         while (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y) == null)
         {
             MovePlateSpawn(x, y);
             x += xIncrement;
             y += yIncrement;
         }
-
         if (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<ChessPiece>().player != player)
         {
             MovePlateAttackSpawn(x, y);
         }
     }
 
+    // Method to generate move plates for knight movement
     public void LMovePlate()
     {
         PointMovePlate(xBoard + 1, yBoard + 2);
@@ -203,6 +191,7 @@ public class ChessPiece : MonoBehaviour
         PointMovePlate(xBoard - 2, yBoard - 1);
     }
 
+    // Method to generate move plates surrounding the king
     public void SurroundMovePlate()
     {
         PointMovePlate(xBoard, yBoard + 1);
@@ -215,13 +204,13 @@ public class ChessPiece : MonoBehaviour
         PointMovePlate(xBoard + 1, yBoard + 1);
     }
 
+    // Method to generate a move plate at a specific point
     public void PointMovePlate(int x, int y)
     {
         Game sc = controller.GetComponent<Game>();
         if (sc.PositionOnBoard(x, y))
         {
             GameObject cp = sc.GetPosition(x, y);
-
             if (cp == null)
             {
                 MovePlateSpawn(x, y);
@@ -233,79 +222,81 @@ public class ChessPiece : MonoBehaviour
         }
     }
 
-    public void PawnMovePlate(int x, int y)
+    // Method to generate move plates for pawn movement
+    // public void PawnMovePlate(int x, int y)
+    // {
+    //     Game sc = controller.GetComponent<Game>();
+    //     if (sc.PositionOnBoard(x, y))
+    //     {
+    //         if (sc.GetPosition(x, y) == null)
+    //         {
+    //             MovePlateSpawn(x, y);
+    //         }
+    //         if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<ChessPiece>().player != player)
+    //         {
+    //             MovePlateAttackSpawn(x + 1, y);
+    //         }
+    //         if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<ChessPiece>().player != player)
+    //         {
+    //             MovePlateAttackSpawn(x - 1, y);
+    //         }
+    //     }
+    // }
+
+    // Method to generate move plates for pawn movement
+public void PawnMovePlate(int x, int y)
 {
     Game sc = controller.GetComponent<Game>();
-    if (sc.PositionOnBoard(x, y))
+
+    // Check if the position in front of the pawn is empty
+    if (sc.PositionOnBoard(x, y) && sc.GetPosition(x, y) == null)
     {
-        // Check if the destination square is empty
-        if (sc.GetPosition(x, y) == null)
+        MovePlateSpawn(x, y);
+
+        // Check if it's the pawn's initial position and if so, allow it to move two squares forward
+        if ((player == "black" && yBoard == 6) || (player == "white" && yBoard == 1))
         {
-            MovePlateSpawn(x, y);
-
-            // If the pawn moved two squares forward, check if it can be captured en passant
-            if (Mathf.Abs(y - yBoard) == 2)
+            int y2 = (player == "black") ? yBoard - 2 : yBoard + 2;
+            if (sc.PositionOnBoard(x, y2) && sc.GetPosition(x, y2) == null)
             {
-                // Check if there is an enemy pawn to the left
-                if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, yBoard) != null &&
-                    sc.GetPosition(x + 1, yBoard).GetComponent<ChessPiece>().player != player &&
-                    sc.GetPosition(x + 1, yBoard).GetComponent<ChessPiece>().name == "white_pawn")
-                {
-                    MovePlateAttackSpawn(x + 1, y);
-                }
-
-                // Check if there is an enemy pawn to the right
-                if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, yBoard) != null &&
-                    sc.GetPosition(x - 1, yBoard).GetComponent<ChessPiece>().player != player &&
-                    sc.GetPosition(x - 1, yBoard).GetComponent<ChessPiece>().name == "white_pawn")
-                {
-                    MovePlateAttackSpawn(x - 1, y);
-                }
+                MovePlateSpawn(x, y2);
             }
         }
+    }
+
+    // Check if the diagonal positions contain opponent's pieces for possible attack moves
+    int diagonalX1 = xBoard - 1;
+    int diagonalX2 = xBoard + 1;
+    int diagonalY = (player == "black") ? yBoard - 1 : yBoard + 1;
+
+    if (sc.PositionOnBoard(diagonalX1, diagonalY) && sc.GetPosition(diagonalX1, diagonalY) != null && sc.GetPosition(diagonalX1, diagonalY).GetComponent<ChessPiece>().player != player)
+    {
+        MovePlateAttackSpawn(diagonalX1, diagonalY);
+    }
+    if (sc.PositionOnBoard(diagonalX2, diagonalY) && sc.GetPosition(diagonalX2, diagonalY) != null && sc.GetPosition(diagonalX2, diagonalY).GetComponent<ChessPiece>().player != player)
+    {
+        MovePlateAttackSpawn(diagonalX2, diagonalY);
     }
 }
 
 
+    // Method to spawn a move plate at a given position
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
-        //Get the board value in order to convert to xy coords
-        float x = matrixX;
-        float y = matrixY;
-
-        //Adjust by variable offset
-        x *= 0.66f;
-        y *= 0.66f;
-
-        //Add constants (pos 0,0)
-        x += -2.3f;
-        y += -2.3f;
-
-        //Set actual unity values
+        float x = matrixX * 0.66f - 2.3f;
+        float y = matrixY * 0.66f - 2.3f;
         GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
-
         HighLight mpScript = mp.GetComponent<HighLight>();
         mpScript.SetReference(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
     }
 
+    // Method to spawn a move plate for an attack move at a given position
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
     {
-        //Get the board value in order to convert to xy coords
-        float x = matrixX;
-        float y = matrixY;
-
-        //Adjust by variable offset
-        x *= 0.66f;
-        y *= 0.66f;
-
-        //Add constants (pos 0,0)
-        x += -2.3f;
-        y += -2.3f;
-
-        //Set actual unity values
+        float x = matrixX * 0.66f - 2.3f;
+        float y = matrixY * 0.66f - 2.3f;
         GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
-
         HighLight mpScript = mp.GetComponent<HighLight>();
         mpScript.attack = true;
         mpScript.SetReference(gameObject);
