@@ -222,28 +222,6 @@ public class ChessPiece : MonoBehaviour
         }
     }
 
-    // Method to generate move plates for pawn movement
-    // public void PawnMovePlate(int x, int y)
-    // {
-    //     Game sc = controller.GetComponent<Game>();
-    //     if (sc.PositionOnBoard(x, y))
-    //     {
-    //         if (sc.GetPosition(x, y) == null)
-    //         {
-    //             MovePlateSpawn(x, y);
-    //         }
-    //         if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<ChessPiece>().player != player)
-    //         {
-    //             MovePlateAttackSpawn(x + 1, y);
-    //         }
-    //         if (sc.PositionOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<ChessPiece>().player != player)
-    //         {
-    //             MovePlateAttackSpawn(x - 1, y);
-    //         }
-    //     }
-    // }
-
-    // Method to generate move plates for pawn movement
 public void PawnMovePlate(int x, int y)
 {
     Game sc = controller.GetComponent<Game>();
