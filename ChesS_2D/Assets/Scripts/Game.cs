@@ -154,18 +154,23 @@ public class Game : MonoBehaviour
 
     // Method to set the panel colors based on whose turn it is
     void SetPanelColors()
+{
+    if (GetCurrentPlayer() == "white")
     {
-        if (GetCurrentPlayer() == "white")
-        {
-            whitePanelImage.color = Color.white; // Change the color of the white panel image to white
-            blackPanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the black panel image to specific RGB (51, 51, 51)
-        }
-        else
-        {
-            whitePanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the white panel image to gray
-            blackPanelImage.color = Color.white; // Change the color of the black panel image to black
-        }
+        whitePanelImage.color = Color.white; // Change the color of the white panel image to white
+        blackPanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the black panel image to specific RGB (51, 51, 51)
+        timer.whiteTimer_txt.color = Color.black; // Change the color of the white timer text to black
+        timer.blackTimer_txt.color = Color.grey; // Change the color of the black timer text to grey
     }
+    else
+    {
+        whitePanelImage.color = new Color32(51, 51, 51, 255); // Change the color of the white panel image to grey
+        blackPanelImage.color = Color.white; // Change the color of the black panel image to black
+        timer.whiteTimer_txt.color = Color.grey; // Change the color of the white timer text to grey
+        timer.blackTimer_txt.color = Color.black; // Change the color of the black timer text to black
+    }
+}
+
 
         public void ShowWinner(string playerName)
     {   
@@ -174,7 +179,6 @@ public class Game : MonoBehaviour
         winnerNameText.text = playerName + " Wins";
         winnerPanel.SetActive(true);
     }
-
 
 
     public void RestartGame()
