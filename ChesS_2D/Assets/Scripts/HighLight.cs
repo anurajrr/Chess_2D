@@ -6,6 +6,7 @@ public class HighLight : MonoBehaviour
 {
     //Some functions will need reference to the controller
     public GameObject controller;
+    private Game game;
 
     //The Chesspiece that was tapped to create this MovePlate
     GameObject reference = null;
@@ -16,49 +17,59 @@ public class HighLight : MonoBehaviour
 
     //false: movement, true: attacking
     public bool attack = false;
-
+    private void Awake() 
+    {
+        
+    }
     public void Start()
     {
         if (attack)
         {
-            //Set to red
             gameObject.GetComponent<SpriteRenderer>().color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
         }
     }
 
     public void OnMouseUp()
+{
+    controller = GameObject.FindGameObjectWithTag("GameController");
+
+    // Destroy the victim Chesspiece
+    if (attack)
     {
-        controller = GameObject.FindGameObjectWithTag("GameController");
+        GameObject cp = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
 
-        //Destroy the victim Chesspiece
-        if (attack)
+        // Check if the taken piece is a king and display the winner accordingly
+        if (cp.name == "white_king") 
         {
-            GameObject cp = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
-
-            // if (cp.name == "white_king") controller.GetComponent<Game>().Winner("black");
-            // if (cp.name == "black_king") controller.GetComponent<Game>().Winner("white");
-
-            Destroy(cp);
+            controller.GetComponent<Game>().ShowWinner("Black");
+        }
+        else if (cp.name == "black_king") 
+        {
+            controller.GetComponent<Game>().ShowWinner("White");
         }
 
-        //Set the Chesspiece's original location to be empty
-        controller.GetComponent<Game>().SetPositionEmpty(reference.GetComponent<ChessPiece>().GetXBoard(), 
-            reference.GetComponent<ChessPiece>().GetYBoard());
-
-        //Move reference chess piece to this position
-        reference.GetComponent<ChessPiece>().SetXBoard(matrixX);
-        reference.GetComponent<ChessPiece>().SetYBoard(matrixY);
-        reference.GetComponent<ChessPiece>().SetCoords();
-
-        //Update the matrix
-        controller.GetComponent<Game>().SetPosition(reference);
-
-        //Switch Current Player
-        controller.GetComponent<Game>().NextTurn();
-
-        //Destroy the move plates including self
-        reference.GetComponent<ChessPiece>().DestroyMovePlates();
+        Destroy(cp);
     }
+
+    // Set the Chesspiece's original location to be empty
+    controller.GetComponent<Game>().SetPositionEmpty(reference.GetComponent<ChessPiece>().GetXBoard(), 
+        reference.GetComponent<ChessPiece>().GetYBoard());
+
+    // Move reference chess piece to this position
+    reference.GetComponent<ChessPiece>().SetXBoard(matrixX);
+    reference.GetComponent<ChessPiece>().SetYBoard(matrixY);
+    reference.GetComponent<ChessPiece>().SetCoords();
+
+    // Update the matrix
+    controller.GetComponent<Game>().SetPosition(reference);
+
+    // Switch Current Player
+    controller.GetComponent<Game>().NextTurn();
+
+    // Destroy the move plates including self
+    reference.GetComponent<ChessPiece>().DestroyMovePlates();
+}
+
 
     public void SetCoords(int x, int y)
     {

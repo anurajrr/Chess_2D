@@ -6,6 +6,9 @@ TagManager:
   tags:
   - MoveHighLighter
   - MovePlate
+  - WinnerText
+  - LoserText
+  - RestartText
   layers:
   - Default
   - TransparentFX

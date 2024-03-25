@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI; // Import the UnityEngine.UI namespace for accessing UI components
 
 public class Game : MonoBehaviour
@@ -20,8 +23,14 @@ public class Game : MonoBehaviour
     private GameObject[] playerBlack = new GameObject[16];
     private GameObject[] playerWhite = new GameObject[16];
 
+
     // Current turn
     private string currentPlayer = "white";
+
+    //winner panel 
+    [SerializeField] private GameObject winnerPanel;
+    [SerializeField] private TextMeshProUGUI winnerNameText;
+    
 
     // Game Ending
     private bool gameOver = false;
@@ -50,11 +59,10 @@ public class Game : MonoBehaviour
 
         // Start the first player's timer
         StartPlayerTimer();
-
+        winnerPanel.SetActive(false);
         // Set the initial panel colors
         SetPanelColors();
     }
-
     public GameObject Create(string name, int x, int y)
     {
         GameObject obj = Instantiate(chesspiece, new Vector3(0, 0, -1), Quaternion.identity);
@@ -155,4 +163,26 @@ public class Game : MonoBehaviour
             blackPanelImage.color = Color.white; // Change the color of the black panel image to black
         }
     }
+
+        public void ShowWinner(string playerName)
+    {   
+        gameOver = true;
+        winnerNameText.text = playerName + " Wins";
+        winnerPanel.SetActive(true); // Activate the winner panel
+    }
+
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("Game");
+        winnerPanel.SetActive(false);
+        StartPlayerTimer();
+
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
+        Debug.Log("Quiting");
+    }
+
 }
