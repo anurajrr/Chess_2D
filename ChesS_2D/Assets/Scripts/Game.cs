@@ -131,10 +131,12 @@ public class Game : MonoBehaviour
     }
 
     public void NextTurn()
-    {
-        StopPlayerTimer(); // Stop the timer for the current player
+{
+    StopPlayerTimer(); // Stop the timer for the current player
 
-        // Switch players
+    // Switch players
+    if (!IsGameOver())
+    {
         if (currentPlayer == "white")
         {
             currentPlayer = "black";
@@ -148,6 +150,7 @@ public class Game : MonoBehaviour
 
         SetPanelColors(); // Update the panel colors
     }
+}
 
     // Method to set the panel colors based on whose turn it is
     void SetPanelColors()
@@ -167,9 +170,11 @@ public class Game : MonoBehaviour
         public void ShowWinner(string playerName)
     {   
         gameOver = true;
+        StopPlayerTimer(); // Stop both player timers
         winnerNameText.text = playerName + " Wins";
-        winnerPanel.SetActive(true); // Activate the winner panel
+        winnerPanel.SetActive(true);
     }
+
 
 
     public void RestartGame()
